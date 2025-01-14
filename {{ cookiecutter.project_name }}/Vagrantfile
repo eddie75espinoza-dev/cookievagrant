@@ -56,9 +56,7 @@ Vagrant.configure("2") do |config|
       apt-get install -y git
 
       # Instalar Python y herramientas relacionadas
-      {% for version in cookiecutter.python_versions %}
-      apt-get install -y python{{ version }} python{{ version }}-dev python{{ version }}-distutils python{{ version }}-venv python{{ version }}-pip
-      {% endfor %}
+      apt-get install -y python{{ python_version }} python{{ python_version }}-dev python{{ python_version }}-distutils python{{ python_version }}-venv python{{ python_version }}-pip
 
       # Habilitar reenvío del agente SSH
       echo "AllowAgentForwarding yes" >> /etc/ssh/sshd_config
