@@ -1,5 +1,6 @@
 {
     "project_name": "VagrantFile",
+    "provider": "virtualbox",
     "ubuntu_version": ["22.04", "24.04"],
     "vm_define": "default",
     "vm_name": "ubuntu_vm",
