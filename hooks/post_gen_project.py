@@ -24,7 +24,7 @@ def validate_configurations():
 
     # Validar tamaño del disco
     disk = '{{ cookiecutter.disk_size }}'
-    match = re.match(r'(\d+)(GB|gb)', disk)
+    match = re.match(r'(\d+)(GB|gb|Gb)', disk)
     if not match:
         print("Error: El tamaño de disco debe estar en formato numérico seguido de 'GB' (por ejemplo, '20GB').")
         sys.exit(1)
