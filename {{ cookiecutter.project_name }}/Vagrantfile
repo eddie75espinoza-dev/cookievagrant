@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
     # Configuración de la máquina virtual
     machine.vm.box = "ubuntu/{{ cookiecutter.ubuntu_version }}" # Sistema operativo
     machine.vm.hostname = "{{ cookiecutter.hostname }}" # Establece el nombre del host, ejemplo "ubuntu-<nombre del desarrollador>"
-    config.vm.boot_timeout = 360 # Esto le dará a la máquina virtual más tiempo para arrancar antes de que Vagrant considere que ha fallado
+    machine.vm.boot_timeout = 360 # Esto le dará a la máquina virtual más tiempo para arrancar antes de que Vagrant considere que ha fallado
     machine.vm.box_check_update = false # Evita la actualización del box
 
     # Configuración de red
@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
       vb.name = "{{ cookiecutter.vb_name }}"
       vb.memory = {{ cookiecutter.memory }}
       vb.cpus = {{ cookiecutter.processors }}
-      vb.customize ["createhd", "--filename", "{{ cookiecutter.vm_name }}_disk", "--size", {{ cookiecutter.disk_size.replace('GB', '').replace('gb', '') }}]
+      vb.customize ["createhd", "--filename", "{{ cookiecutter.vb_name }}_disk", "--size", {{ cookiecutter.disk_size.replace('GB', '').replace('gb', '') }}]
     end
 
     # Provisión de la máquina virtual
