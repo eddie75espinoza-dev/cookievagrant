@@ -1,0 +1,71 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.define "{{ cookiecutter.vm_define }}" do |machine|
+    # Configuración de la máquina virtual
+    machine.vm.box = "ubuntu/{{ cookiecutter.ubuntu_version }}"
+    machine.vm.hostname = "{{ cookiecutter.hostname }}"
+
+    # Configuración de red
+    machine.vm.network "private_network", type: "dhcp", virtualbox__intnet: true, auto_config: true
+    machine.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+    machine.vm.network "forwarded_port", guest: 5432, host: 5432, id: "pgsql", auto_correct: true
+
+    # Configuración del proveedor
+    machine.vm.provider "virtualbox" do |vb|
+      vb.name = "{{ cookiecutter.vm_name }}"
+      vb.memory = {{ cookiecutter.memory }}
+      vb.cpus = {{ cookiecutter.processors }}
+      vb.customize ["createhd", "--filename", "{{ cookiecutter.vm_name }}_disk", "--size", {{ cookiecutter.disk_size.replace('GB', '') }}]
+    end
+
+    # Provisión de la máquina virtual
+    machine.vm.provision "shell", inline: <<-SHELL
+      # Actualizar paquetes
+      apt-get update && apt-get upgrade -y && apt-get install -y build-essential libssl-dev libffi-dev libpq-dev gcc
+
+      # Instalar dependencias
+      apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+
+      # Instalar Docker
+      curl -fsSL https://get.docker.com -o get-docker.sh
+      sh get-docker.sh
+      usermod -aG docker $USER
+
+      # Instalar Docker Compose
+      DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": \"\K.*?(?=\")')
+      curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      chmod +x /usr/local/bin/docker-compose
+
+      # Instalar PostgreSQL
+      sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+      wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+      apt-get update
+      apt-get install -y postgresql-14
+
+      # Instalar Nginx
+      apt-get install -y nginx=1.18.0-0ubuntu1
+
+      # Instalar Node.js versión específica
+      NODE_VERSION={{ cookiecutter.node_version }}
+      curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
+      apt-get install -y nodejs
+
+      # Instalar Git
+      apt-get install -y git
+
+      # Instalar Python y herramientas relacionadas
+      {% for version in cookiecutter.python_versions %}
+      apt-get install -y python{{ version }} python{{ version }}-dev python{{ version }}-distutils python{{ version }}-venv python{{ version }}-pip
+      {% endfor %}
+
+      # Habilitar reenvío del agente SSH
+      echo "AllowAgentForwarding yes" >> /etc/ssh/sshd_config
+      systemctl restart sshd
+
+      # Añadir el usuario vagrant al grupo de Docker
+      sudo usermod -aG docker vagrant
+    SHELL
+  end
+end
