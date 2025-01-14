@@ -2,7 +2,7 @@
     "project_name": "VagrantFile",
     "provider": "virtualbox",
     "ubuntu_version": ["20.04", "22.04", "24.04"],
-    "box_name": "focal64",
+    "box_name": "",
     "vb_name": "ubuntu-{{ cookiecutter.ubuntu_version }}",
     "vm_define": "{{ cookiecutter.vb_name}}",
     "hostname": "vagrant-host",
