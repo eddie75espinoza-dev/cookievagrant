@@ -18,7 +18,7 @@ def validate_configurations():
 
     # Validar versión de Ubuntu
     ubuntu_version = '{{ cookiecutter.ubuntu_version }}'
-    if ubuntu_version not in ['22.04', '24.04']:
+    if ubuntu_version not in ['20.04', '22.04', '24.04']:
         print(f"Error: La versión de Ubuntu {ubuntu_version} no está soportada.")
         sys.exit(1)
 
