@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
       vb.name = "{{ cookiecutter.vb_name }}"
       vb.memory = {{ cookiecutter.memory }}
       vb.cpus = {{ cookiecutter.processors }}
-      vb.customize ["createhd", "--filename", "{{ cookiecutter.vb_name }}_disk", "--size", {{ cookiecutter.disk_size.replace('GB', '').replace('gb', '') }}]
+      vb.customize ["createhd", "--filename", "{{ cookiecutter.vb_name }}_disk", "--size", {{ cookiecutter.disk_size.replace('gb', 'GB').replace('GB', '') }}]
     end
 
     # Provisión de la máquina virtual
