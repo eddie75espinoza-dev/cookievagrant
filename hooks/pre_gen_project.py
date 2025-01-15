@@ -16,4 +16,4 @@ if ubuntu_version not in UBUNTU_TO_BOX:
     sys.exit(1)
 
 # Exponer el valor calculado para box_name
-print(f"Seleccionando caja: {UBUNTU_TO_BOX[ubuntu_version]} para Ubuntu {ubuntu_version}")
+print(f"Seleccionando box: {UBUNTU_TO_BOX[ubuntu_version]} para Ubuntu {ubuntu_version}")
