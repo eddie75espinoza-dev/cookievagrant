@@ -15,7 +15,8 @@ Vagrant.configure("2") do |config|
       "ubuntu/noble64"
     else
       raise "Error: Versión de Ubuntu no soportada (#{ubuntu_version})"
-    end   
+    end
+    machine.vm.box = box_name
     machine.vm.hostname = "{{ cookiecutter.hostname }}" # Establece el nombre del host, ejemplo "ubuntu-<nombre del desarrollador>"
     machine.vm.boot_timeout = 360 # Esto le dará a la máquina virtual más tiempo para arrancar antes de que Vagrant considere que ha fallado
     machine.vm.box_check_update = false # Evita la actualización del box
@@ -33,7 +34,7 @@ Vagrant.configure("2") do |config|
 
     # Configuración del proveedor
     machine.vm.provider "{{ cookiecutter.provider }}" do |vb|
-      vb.name = "{{ cookiecutter.vb_name }}"
+      vb.name = box_name.replace('/', ' ').replace('64', '')
       vb.memory = {{ cookiecutter.memory }}
       vb.cpus = {{ cookiecutter.processors }}
       vb.customize ["createhd", "--filename", "{{ cookiecutter.vb_name }}_disk", "--size", {{ cookiecutter.disk_size.replace('gb', '').replace('Gb', '').replace('GB', '') }}]
@@ -42,12 +43,14 @@ Vagrant.configure("2") do |config|
     # Provisión de la máquina virtual
     machine.vm.provision "shell", inline: <<-SHELL
       # Actualizar paquetes
+      echo "-----> Actualizando paquetes y dependencias..."
       apt-get update && apt-get upgrade -y && apt-get install -y build-essential libssl-dev libffi-dev libpq-dev gcc
 
       # Instalar dependencias
       apt-get install -y apt-transport-https ca-certificates curl software-properties-common
 
       # Instalar Docker
+      echo "-----> Instalando Docker y docker compose..."
       curl -fsSL https://get.docker.com -o get-docker.sh
       sh get-docker.sh
       usermod -aG docker $USER
@@ -58,24 +61,29 @@ Vagrant.configure("2") do |config|
       chmod +x /usr/local/bin/docker-compose
 
       # Instalar PostgreSQL
+      echo "-----> Instalando Postgresql..."
       sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
       wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
       apt-get update
       apt-get install -y postgresql-14
 
       # Instalar Nginx
+      echo "-----> Instalando Nginx..."
       apt-get install -y nginx=1.18.0-0ubuntu1
 
       # Instalar Node.js versión específica
+      echo "-----> Instalando NodeJs..."
       NODE_VERSION={{ cookiecutter.node_version }}
       curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
       apt-get install -y nodejs
 
       # Instalar Git
+      echo "-----> Instalando GIT..."
       apt-get install -y git
 
       # Instalar Python y herramientas relacionadas
-      apt-get install -y python{{ cookiecutter.python_versions }} python{{ cookiecutter.python_versions }}-dev python{{ cookiecutter.python_versions }}-distutils python{{ cookiecutter.python_versions }}-venv python{{ cookiecutter.python_versions }}-pip
+      echo "-----> Instalando Python..."
+      apt-get install -y python{{ cookiecutter.python_versions }} python3-dev python3-distutils python3-venv python3-pip
 
       # Habilitar reenvío del agente SSH
       echo "AllowAgentForwarding yes" >> /etc/ssh/sshd_config

@@ -2,7 +2,6 @@
     "project_name": "VagrantFile",
     "provider": "virtualbox",
     "ubuntu_version": ["20.04", "22.04", "24.04"],
-    "vb_name": "ubuntu-{{ cookiecutter.ubuntu_version }}",
     "vm_define": "{{ cookiecutter.vb_name }}",
     "hostname": "vagrant-host",
     "memory": ["1024", "2048", "4096", "8192", "12288"],
