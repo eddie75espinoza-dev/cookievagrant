@@ -20,6 +20,7 @@ Vagrant.configure("2") do |config|
     machine.vm.hostname = "{{ cookiecutter.hostname }}" # Establece el nombre del host, ejemplo "ubuntu-<nombre del desarrollador>"
     machine.vm.boot_timeout = 360 # Esto le dará a la máquina virtual más tiempo para arrancar antes de que Vagrant considere que ha fallado
     machine.vm.box_check_update = false # Evita la actualización del box
+    machine.vm.disk :disk, size: "{{ cookiecutter.disk_size}}", primary: true
 
     # Configuración de red
     machine.vm.network "private_network",
@@ -37,9 +38,13 @@ Vagrant.configure("2") do |config|
       vb.name = box_name.gsub('/', ' ').gsub('64', '')
       vb.memory = {{ cookiecutter.memory }}
       vb.cpus = {{ cookiecutter.processors }}
-      vb.customize ["createhd", "--filename", box_name+"_disk", "--size", {{ cookiecutter.disk_size.replace('gb', '').replace('Gb', '').replace('GB', '') }}]
     end
 
+    # Provisionamiento
+    # Personaliza la configuración de aprovisionamiento para esperar 45 segundos 
+    # antes de hacer la conexión SSH, esto es para evitar la conexión SSH antes 
+    # de que todas las configuraciones de red estén listas.
+    machine.vm.provision "shell", inline: "sleep 30"
     # Provisión de la máquina virtual
     machine.vm.provision "shell", inline: <<-SHELL
       # Actualizar paquetes
@@ -83,11 +88,11 @@ Vagrant.configure("2") do |config|
 
       # Instalar Python y herramientas relacionadas
       echo "-----> Instalando Python..."
-      apt-get install -y python{{ cookiecutter.python_versions }} python3-dev python3-distutils python3-venv python3-pip
+      apt-get install -y python{{ cookiecutter.python_versions }} python3.10-dev python3.10-distutils python3.10-venv python3.10-pip
 
       # Habilitar reenvío del agente SSH
-      echo "AllowAgentForwarding yes" >> /etc/ssh/sshd_config
-      systemctl restart sshd
+      # echo "AllowAgentForwarding yes" >> /etc/ssh/sshd_config
+      # systemctl restart sshd
 
       # Añadir el usuario vagrant al grupo de Docker
       echo "-----> Actualizando usuario Docker..."
