@@ -90,7 +90,10 @@ Vagrant.configure("2") do |config|
       systemctl restart sshd
 
       # Añadir el usuario vagrant al grupo de Docker
+      echo "-----> Actualizando usuario Docker..."
       sudo usermod -aG docker vagrant
+
+      echo "-----> {{ cookiecutter.vm_define.replace('.', '-') }} is ready"
     SHELL
   end
 end
