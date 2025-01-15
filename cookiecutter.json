@@ -5,7 +5,7 @@
     "vm_define": "ubuntu/{{ cookiecutter.ubuntu_version}}",
     "hostname": "vagrant-host",
     "memory": ["1024", "2048", "4096", "8192", "12288"],
-    "disk_size": "20GB",
+    "disk_size": "40GB",
     "processors": "2",
     "python_versions": ["3.10", "3.11", "3.12", "3.13"],
     "node_version": ["20", "22"],
