@@ -5,7 +5,17 @@ Vagrant.configure("2") do |config|
   config.vm.define "{{ cookiecutter.vm_define.replace('.', '-') }}" do |machine|
     # Configuración de la máquina virtual
     # Sistema operativo
-    machine.vm.box = "ubuntu/{{ cookiecutter.box_name }}"    
+    ubuntu_version = "{{ cookiecutter.ubuntu_version }}"
+    box_name = case ubuntu_version
+    when "20.04"
+      "ubuntu/focal64"
+    when "22.04"
+      "ubuntu/jammy64"
+    when "24.04"
+      "ubuntu/noble64"
+    else
+      raise "Error: Versión de Ubuntu no soportada (#{ubuntu_version})"
+    end   
     machine.vm.hostname = "{{ cookiecutter.hostname }}" # Establece el nombre del host, ejemplo "ubuntu-<nombre del desarrollador>"
     machine.vm.boot_timeout = 360 # Esto le dará a la máquina virtual más tiempo para arrancar antes de que Vagrant considere que ha fallado
     machine.vm.box_check_update = false # Evita la actualización del box
