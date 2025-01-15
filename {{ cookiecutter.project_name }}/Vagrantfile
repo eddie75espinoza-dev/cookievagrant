@@ -97,8 +97,9 @@ Vagrant.configure("2") do |config|
       # Añadir el usuario vagrant al grupo de Docker
       echo "-----> Actualizando usuario Docker..."
       sudo usermod -aG docker vagrant
-      
-      echo "$box_name is ready"
     SHELL
+
+    # Mensaje de finalización
+    config.vm.post_up_message = "{{ cookiecutter.vm_define.replace('/', '-').replace('.', '-') }} provisionada correctamente. Puedes acceder ejecutando 'vagrant ssh'."
   end
 end
