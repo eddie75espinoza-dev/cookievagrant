@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
 
     # Configuración del proveedor
     machine.vm.provider "{{ cookiecutter.provider }}" do |vb|
-      vb.name = box_name.replace('/', ' ').replace('64', '')
+      vb.name = box_name.gsub('/', ' ').gsub('64', '')
       vb.memory = {{ cookiecutter.memory }}
       vb.cpus = {{ cookiecutter.processors }}
       vb.customize ["createhd", "--filename", box_name+"_disk", "--size", {{ cookiecutter.disk_size.replace('gb', '').replace('Gb', '').replace('GB', '') }}]
