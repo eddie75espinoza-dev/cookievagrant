@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
     when "22.04"
       "ubuntu/jammy64"
     when "24.04"
-      "ubuntu/noble64"
+      "ubuntu/noble64" # 15/1/2025 imagen de descarga aun no creada por ubuntu
     else
       raise "Error: Versión de Ubuntu no soportada (#{ubuntu_version})"
     end
@@ -97,9 +97,12 @@ Vagrant.configure("2") do |config|
       # Añadir el usuario vagrant al grupo de Docker
       echo "-----> Actualizando usuario Docker..."
       sudo usermod -aG docker vagrant
+
+      # Mensaje de finalización
+      machine.vm.provision "shell", inline: "echo ----->  {{ cookiecutter.vm_define }} Ready!!!!!!"
     SHELL
 
     # Mensaje de finalización
-    config.vm.post_up_message = "{{ cookiecutter.vm_define.replace('/', '-').replace('.', '-') }} provisionada correctamente. Puedes acceder ejecutando 'vagrant ssh'."
+    machine.vm.post_up_message = "{{ cookiecutter.vm_define }} provisionada correctamente. Puedes acceder ejecutando 'vagrant ssh'."
   end
 end
