@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.define "{{ cookiecutter.vm_define.replace('.', '-') }}" do |machine|
+  config.vm.define "{{ cookiecutter.vm_define.replace('/', '-').replace('.', '-') }}" do |machine|
     # Configuración de la máquina virtual
     # Sistema operativo
     ubuntu_version = "{{ cookiecutter.ubuntu_version }}"
