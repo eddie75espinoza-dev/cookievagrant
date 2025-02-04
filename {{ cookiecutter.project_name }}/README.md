@@ -1,5 +1,9 @@
 # Entorno de desarrollo con Vagrant
 
+![Static Badge](https://img.shields.io/badge/Estatus-En%20Producción-green)
+![Static Badge](https://img.shields.io/badge/Lenguaje-Ruby-red)
+![Static Badge](https://img.shields.io/badge/Versi%C3%B3n-1.0.0-blue)
+
 #### Índice
 
 * [Vagrant](#vagrant)
@@ -35,9 +39,11 @@ Antes de iniciar el proceso, debe considerar que sistema operativo usar, cada ar
 
 | Archivo            | Versión de Ubuntu LTS      | Nombre Clave        | Python version |
 |--------------------|----------------------------|---------------------|----------------|
-| `vagrantfile`      | 22.04 LTS                  | Jammy Jellyfish     | 3.10           |
-| `vagrantfile`      | 20.04 LTS                  | Focal Fossa         | 3.8            |
+| `vagrantfile_22`   | 22.04 LTS                  | Jammy Jellyfish     | 3.10           |
+| `vagrantfile_20`   | 20.04 LTS                  | Focal Fossa         | 3.8            |
 | `vagrantfile`      | 18.04 LTS                  | Bionic Beaver       | 3.8            |
+
+> ⚠️ **Nota importante:** Una vez seleccionado el archivo deberá cambiar su nombre a **vagrantfile**
 
 
 Para usar Vagrant, primero defina la ruta desde donde se ejecutará el archivo de configuración **"vagrantfile"**.
@@ -49,36 +55,49 @@ Para validar la sintaxis del archivo de configuración, use:
 ```bash
 vagrant validate
 ```
+Verifica que el _Vagrantfile_ no contenga errores de sintaxis antes de ejecutar la máquina virtual.
 
 Para provisionar y levantar la máquina virtual, use:
 
 ```bash
 vagrant up
 ```
+Crea y configura la máquina virtual según las especificaciones del _Vagrantfile_.
 
 Si desea ingresar a la máquina virtual por consola, use:
 
 ```bash
 vagrant ssh
 ```
+Accede a la máquina virtual mediante una conexión SSH.
 
 Puede suspender de la máquina virtual, esto la detendrá y guardará el estado de ejecución actual.
 
 ```bash
 vagrant suspend
 ```
+Este comando detiene la ejecución de la máquina sin apagarla por completo, permitiendo reanudarla más rápido.
+
+Para reanudar la máquina virtual desde el estado suspendido, use:
+
+```bash
+vagrant resume
+```
+Restablece la ejecución de la máquina desde el estado en que fue suspendida, sin necesidad de un arranque completo.
 
 Para detener y cerrar la máquina virtual de manera segura, use:
 
 ```bash
 vagrant halt
-``` 
+```
+Apaga la máquina virtual correctamente sin eliminarla.
 
-y si desea eliminarla (*con esto perderá toda la información*), use:
+Si desea eliminar la máquina virtual (esto borrará todos sus datos y configuraciones no persistentes), use:
 
 ```bash
 vagrant destroy
 ```
+Elimina completamente la máquina virtual y su almacenamiento asociado.
 
 Para saber más, visite los [tutoriales de Vagrant](https://developer.hashicorp.com/vagrant/tutorials/getting-started/getting-started-index)
 
